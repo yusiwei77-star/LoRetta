@@ -15,6 +15,7 @@ dependencies = [
     "pillow>=11.0",
     "opencv-python>=4.10",
     "einops>=0.8",
+    "huggingface_hub>=0.30",
     "ftfy",
     "omegaconf",
     "regex",

@@ -11,7 +11,6 @@ from src.inference import (
 PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_REFERENCE_IMAGE = PROJECT_ROOT / "assets" / "reference.jpg"
 DEFAULT_SENSED_IMAGE = PROJECT_ROOT / "assets" / "sensed.jpg"
-DEFAULT_CHECKPOINT = PROJECT_ROOT / "checkpoints" / "loretta.pth"
 
 
 def parse_args() -> argparse.Namespace:
@@ -30,8 +29,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--checkpoint",
-        default=str(DEFAULT_CHECKPOINT),
-        help=f"Trusted LoRetta checkpoint path (default: {DEFAULT_CHECKPOINT})",
+        default=None,
+        help="Local LoRetta checkpoint (default: download from Hugging Face)",
     )
     parser.add_argument("--output-dir", default="outputs", help="Output directory")
     parser.add_argument("--device", choices=("auto", "cuda", "cpu"), default="auto")

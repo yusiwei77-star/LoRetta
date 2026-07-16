@@ -9,7 +9,7 @@ import torch
 
 from ..config import get_inference_config
 from ..loretta import LoRetta
-from .checkpoint import load_checkpoint
+from .checkpoint import load_checkpoint, resolve_checkpoint
 from .geometry import estimate_homography
 from .image import (
     MODEL_SIZE,
@@ -50,7 +50,7 @@ def run_demo(
     *,
     reference_path: str | Path,
     sensed_path: str | Path,
-    checkpoint_path: str | Path,
+    checkpoint_path: str | Path | None = None,
     output_dir: str | Path,
     requested_device: str = "auto",
     estimate_geometry: bool = False,
@@ -76,7 +76,7 @@ def run_demo(
     sensed_tensor, sensed_model = image_to_tensor(sensed_original, device)
 
     model = LoRetta(get_inference_config(enable_amp=device.type == "cuda"))
-    load_checkpoint(model, checkpoint_path)
+    load_checkpoint(model, resolve_checkpoint(checkpoint_path))
     model = model.eval().to(device)
     batch = {
         "reference_image": reference_tensor,

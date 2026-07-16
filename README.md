@@ -15,10 +15,12 @@ pip install -r requirements.txt
 
 ## 模型权重
 
-论文发表后，我们会提供纯推理权重 `loretta.pth` 的下载地址。将下载的文件放到：
+运行 Demo 时，程序会自动从 [BRoss123/LoRetta](https://huggingface.co/BRoss123/LoRetta) 下载 `loretta.pth` 并保存到 Hugging Face 本地缓存，无需手动放置权重。代码固定到已验证的模型仓库 revision，避免 `main` 后续变化影响复现。该仓库在论文发表前保持私有，因此目前需要先登录具有访问权限的 Hugging Face 账号；论文发表并公开仓库后，读者无需登录。
 
-```text
-checkpoints/loretta.pth
+也可以手动下载权重并通过参数指定：
+
+```powershell
+python demo.py --checkpoint C:\path\to\loretta.pth
 ```
 
 权重是包含 807 个 tensor entries 的 canonical state dict，不含 Lightning 配置、训练元数据或可执行 Python 对象。读者不需要进行权重迁移；推理代码仅接受官方发布的 canonical 权重。
@@ -31,7 +33,7 @@ checkpoints/loretta.pth
 
 ## 运行 Demo
 
-仓库内置 `assets/reference.jpg` 和 `assets/sensed.jpg`。权重放置完成后，直接运行：
+仓库内置 `assets/reference.jpg` 和 `assets/sensed.jpg`。直接运行：
 
 ```powershell
 python demo.py --output-dir outputs

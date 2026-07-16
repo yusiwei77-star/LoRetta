@@ -1,7 +1,34 @@
 from pathlib import Path
 
 import torch
+from huggingface_hub import hf_hub_download
 from torch import nn
+
+
+MODEL_REPO_ID = "BRoss123/LoRetta"
+CHECKPOINT_FILENAME = "loretta.pth"
+MODEL_REVISION = "b26b60f781ea5d7dc483e347afc00fd410fe514b"
+
+
+def resolve_checkpoint(checkpoint_path: str | Path | None = None) -> Path:
+    """Return an explicit checkpoint or download the published LoRetta weights."""
+    if checkpoint_path is not None:
+        return Path(checkpoint_path)
+
+    try:
+        return Path(
+            hf_hub_download(
+                repo_id=MODEL_REPO_ID,
+                filename=CHECKPOINT_FILENAME,
+                revision=MODEL_REVISION,
+            )
+        )
+    except Exception as error:
+        raise RuntimeError(
+            f"Could not download {MODEL_REPO_ID}/{CHECKPOINT_FILENAME}. "
+            "Check the network connection and Hugging Face repository access, "
+            "or pass --checkpoint with a local file."
+        ) from error
 
 
 def load_checkpoint(model: nn.Module, checkpoint_path: str | Path) -> int:
