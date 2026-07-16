@@ -1,9 +1,31 @@
 # Third-party notices
 
-This initial code migration contains or depends on components derived from:
+LoRetta-authored source code is licensed under the Apache License 2.0. Third-party components and materials remain subject to their respective licenses; the project-level license does not replace those terms.
 
-- Meta DINOv3, loaded from the pinned `facebookresearch/dinov3` commit `adc254450203739c8149213a7a69d8d905b4fcfa` through `torch.hub`.
-- RoMaV2 architectural utilities used by LoRetta's affine locator and multi-view Transformer.
-- Torchvision's VGG19 architecture used by the dense refiner.
+## DINOv3
 
-Existing source headers were retained in mechanically migrated files. Before public redistribution, review the upstream repositories' license terms and add their required license texts together with the selected project-level license.
+- Upstream: <https://github.com/facebookresearch/dinov3>
+- Pinned commit: `adc254450203739c8149213a7a69d8d905b4fcfa`
+- License: DINOv3 License
+- Local license copy: [`third_party/licenses/DINOV3_LICENSE.md`](third_party/licenses/DINOV3_LICENSE.md)
+
+LoRetta loads the DINOv3 ViT-L/16 architecture from the pinned upstream commit through `torch.hub`. The distributed LoRetta checkpoint incorporates DINOv3 parameters and is therefore distributed separately under the DINOv3 License. Use and redistribution of those materials must comply with that license, including its attribution, redistribution, and use restrictions.
+
+## RoMaV2
+
+- Upstream: <https://github.com/Parskatt/RoMaV2>
+- License: MIT License
+- Local license copy: [`third_party/licenses/ROMAV2_MIT.txt`](third_party/licenses/ROMAV2_MIT.txt)
+
+Portions of the affine locator, dense register, Transformer, geometry, and local-correlation implementation were derived from or adapted from RoMaV2. Copyright (c) 2025 Johan Edstedt.
+
+## Torchvision
+
+- Upstream: <https://github.com/pytorch/vision>
+- Referenced release: `v0.21.0`
+- License: BSD 3-Clause License
+- Local license copy: [`third_party/licenses/TORCHVISION_BSD_3_CLAUSE.txt`](third_party/licenses/TORCHVISION_BSD_3_CLAUSE.txt)
+
+LoRetta uses the VGG19 architecture provided by Torchvision. No separately pretrained Torchvision VGG19 weights are redistributed.
+
+Other Python dependencies retain the licenses supplied by their respective copyright holders. Names and trademarks of third-party projects are used only for identification and do not imply endorsement.

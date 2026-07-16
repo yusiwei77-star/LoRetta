@@ -109,4 +109,12 @@ LoRetta/
 └── demo.py              # 双图 Demo 入口
 ```
 
-输入影像会转为 RGB、固定缩放至 512×512，并使用训练时的 mean/std 归一化。第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。当前尚未选择项目级许可证。
+输入影像会转为 RGB、固定缩放至 512×512，并使用训练时的 mean/std 归一化。
+
+## License
+
+Copyright 2026 LEVIR Lab, Beihang University.
+
+LoRetta 自研源代码按照 [Apache License 2.0](LICENSE) 发布。第三方组件继续受各自许可证约束，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 和 [`third_party/licenses/`](third_party/licenses/)。
+
+Hugging Face 发布的 `loretta.pth` 包含 DINOv3 参数，因此模型权重按照单独的 [DINOv3 License](third_party/licenses/DINOV3_LICENSE.md) 分发，不适用 Apache-2.0。DINOv3 使用自定义许可条款；使用或再分发权重前请阅读完整协议。

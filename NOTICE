@@ -1,0 +1,11 @@
+LoRetta
+Copyright 2026 LEVIR Lab, Beihang University
+
+This product includes software derived from RoMaV2,
+Copyright (c) 2025 Johan Edstedt, licensed under the MIT License.
+
+This product uses the DINOv3 architecture and incorporates DINOv3 parameters
+distributed by Meta Platforms, Inc. under the DINOv3 License.
+
+This product uses the VGG19 architecture provided by Torchvision, licensed
+under the BSD 3-Clause License.
