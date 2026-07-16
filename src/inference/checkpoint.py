@@ -7,7 +7,7 @@ from torch import nn
 
 MODEL_REPO_ID = "BRoss123/LoRetta"
 CHECKPOINT_FILENAME = "loretta.pth"
-MODEL_REVISION = "b26b60f781ea5d7dc483e347afc00fd410fe514b"
+MODEL_REVISION = "9ee3c5712d8da9ff47b7b8d377b3dc00906ab287"
 
 
 def resolve_checkpoint(checkpoint_path: str | Path | None = None) -> Path:
