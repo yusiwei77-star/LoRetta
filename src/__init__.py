@@ -1,8 +1,4 @@
-"""LoRetta source package.
-
-Future training, datasets, losses, metrics, and evaluation packages should be
-added as peers of ``config``, ``inference``, and ``loretta``.
-"""
+"""LoRetta inference package."""
 
 from .loretta import LoRetta
 

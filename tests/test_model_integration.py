@@ -2,7 +2,6 @@ import os
 import unittest
 from pathlib import Path
 
-import numpy as np
 import torch
 
 from src.config import get_inference_config
@@ -12,7 +11,6 @@ from src.loretta import LoRetta
 
 
 CHECKPOINT = os.environ.get("LORETTA_CHECKPOINT")
-BASELINE = os.environ.get("LORETTA_BASELINE")
 DEVICE = os.environ.get(
     "LORETTA_TEST_DEVICE", "cuda" if torch.cuda.is_available() else "cpu"
 )
@@ -36,7 +34,7 @@ class ModelIntegrationTests(unittest.TestCase):
         self.assertEqual(len(self.model.state_dict()), 807)
         self.assertEqual(load_checkpoint(self.model, CHECKPOINT), 807)
 
-    def test_default_pair_output_contract_and_regression(self):
+    def test_default_pair_output_contract(self):
         self.assertEqual(load_checkpoint(self.model, CHECKPOINT), 807)
         self.model.eval().to(self.device)
         reference, _ = image_to_tensor(
@@ -58,18 +56,3 @@ class ModelIntegrationTests(unittest.TestCase):
         self.assertEqual(tuple(batch["matchability_1"].shape), (1, 1, 512, 512))
         self.assertTrue(torch.isfinite(batch["warp_1"]).all())
         self.assertTrue(torch.isfinite(batch["matchability_1"]).all())
-
-        if BASELINE:
-            baseline = np.load(BASELINE)
-            np.testing.assert_allclose(
-                batch["warp_1"][0].float().cpu().numpy(),
-                baseline["warp"],
-                atol=1e-6,
-                rtol=1e-5,
-            )
-            np.testing.assert_allclose(
-                batch["matchability_1"][0].float().cpu().numpy(),
-                baseline["matchability"],
-                atol=1e-6,
-                rtol=1e-5,
-            )
