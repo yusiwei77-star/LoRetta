@@ -1,39 +1,43 @@
 # LoRetta
 
-LoRetta 是论文中 Localization-and-Registration 模型的独立纯推理实现。代码命名与论文保持一致：模型先由 `AffineLocator` 估计 matchability-weighted affine prior，再由 `DenseRegister` 在 affine-aligned frame 中通过 `Refiner0–2` 预测 residual warp 和最终 matchability。
+LoRetta 是论文中 Localization-and-Registration 模型的独立纯推理实现。模型先由 `AffineLocator` 估计 matchability-weighted affine prior，再由 `DenseRegister` 在 affine-aligned frame 中通过 `Refiner0–2` 预测 residual warp 和最终 matchability。
 
-## 环境
+## 环境安装
 
 - Python 3.10+
 - PyTorch 2.6+
-- 推荐 CUDA；CPU 可以运行，但速度较慢
-- 首次运行需要联网。DINOv3 ViT-L/16 架构通过固定 commit 的 `torch.hub` 加载，参数随后由 LoRetta checkpoint 覆盖
+- 推荐使用 CUDA；CPU 可以运行，但速度较慢
+- 首次运行需要联网，以便从固定 commit 加载 DINOv3 ViT-L/16 架构；其参数随后由 LoRetta 权重覆盖
 
 ```bash
 pip install -r requirements.txt
 ```
 
-也可以将本项目以 editable package 安装：
+## 模型权重
 
-```bash
-pip install -e .
+论文发表后，我们会提供纯推理权重 `loretta.pth` 的下载地址。将下载的文件放到：
+
+```text
+checkpoints/loretta.pth
+```
+
+权重是包含 807 个 tensor entries 的 canonical state dict，不含 Lightning 配置、训练元数据或可执行 Python 对象。读者不需要进行权重迁移；推理代码仅接受官方发布的 canonical 权重。
+
+发布权重的 SHA-256 校验值：
+
+```text
+09a502056b671d4e07819f454f96eb385ebe605a186ee1b059ce2447d8fb602e
 ```
 
 ## 运行 Demo
 
-仓库默认使用以下文件：
-
-- `assets/reference.jpg`
-- `assets/sensed.jpg`
-- `checkpoints/loretta.pth`
-
-因此完成环境安装后可以直接运行：
+仓库内置 `assets/reference.jpg` 和 `assets/sensed.jpg`。权重放置完成后，直接运行：
 
 ```powershell
 python demo.py --output-dir outputs
 ```
 
-使用自己的影像和权重：
+使用自己的影像：
 
 ```powershell
 python demo.py `
@@ -45,70 +49,48 @@ python demo.py `
 
 默认输出：
 
-- `dense_registered.png`：sensed image 配准到 reference frame
-- `matchability.png`：reference frame 下的预测 matchability map
+- `dense_registered.png`：配准至 reference frame 的 sensed image
+- `matchability.png`：reference frame 下的 matchability map
 
-增加 `--estimate-geometry` 后，程序从高 matchability 对应中随机、无放回地采样，并用 OpenCV RANSAC 拟合 sensed-to-reference homography。成功时额外输出 `ransac_inliers.png` 和 `homography_registered.png`。程序不生成 JSON。
-
-完整参数见：
+增加 `--estimate-geometry` 后，程序从高 matchability 对应中随机、无放回采样，并使用 OpenCV RANSAC 拟合 sensed-to-reference homography。估计成功时额外输出 `ransac_inliers.png` 和 `homography_registered.png`。程序不生成 JSON。
 
 ```bash
 python demo.py --help
 ```
 
-## 论文式模型接口
+## 模型接口
 
 `LoRetta.forward(batch)` 接收：
 
-- `reference_image`：论文中的 (I_r)
-- `sensed_image`：论文中的 (I_s)
+- `reference_image`：论文中的 \(I_r\)
+- `sensed_image`：论文中的 \(I_s\)
 
-并向同一个字典增加：
+并向同一字典增加：
 
-- `warp_1`：论文中的 (W_{1/1})，存储 normalized reference-to-sensed target coordinates
-- `matchability_1`：论文中的 (M_{1/1})
+- `warp_1`：论文中的 \(W_{1/1}\)，表示从 reference pixel 指向 sensed image 的 normalized target coordinates
+- `matchability_1`：论文中的 \(M_{1/1}\)
 
-模型模块和论文对应如下：
+主要模块与论文对应如下：
 
-- `dinov3_feature_extractor`：frozen DINOv3 coarse feature extractor
+- `dinov3_feature_extractor`：DINOv3 coarse feature extractor
 - `affine_locator`：matchability-weighted affine locator
-- `vgg_feature_pyramid`：ΦVGG feature pyramid
+- `vgg_feature_pyramid`：VGG19 feature pyramid
 - `dense_register.refiner0`：1/16 residual refiner
 - `dense_register.refiner1`：1/8 residual refiner
 - `dense_register.refiner2`：1/4 residual refiner
 
-## 权重
+## 验证
 
-`checkpoints/loretta.pth` 是包含 807 个 canonical state-dict entries 的纯推理权重，不包含 Lightning 训练配置或其他元数据。权重文件被 `.gitignore` 排除。
-
-旧 Lightning checkpoint 不能由推理 loader 直接加载，需要显式转换：
-
-```powershell
-python scripts/migrate_checkpoint.py `
-  G:\Projects\RSIR-LM\epoch=5-val_loss=0.0264.ckpt `
-  checkpoints\loretta.pth
-```
-
-迁移工具需要额外依赖：
-
-```bash
-pip install -r requirements-migration.txt
-```
-
-推理 loader 仅允许安全的 tensor-only 反序列化，不会自动执行旧 checkpoint 中的 Python 元数据。旧 Lightning checkpoint 只应在确认可信后交给迁移脚本处理。
-
-## 测试
-
-快速测试：
+无需权重的接口测试：
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-真实权重集成测试：
+使用发布权重进行模型集成测试：
 
 ```powershell
-$env:LORETTA_CHECKPOINT = "G:\Projects\LoRetta\checkpoints\loretta.pth"
+$env:LORETTA_CHECKPOINT = "checkpoints\loretta.pth"
 python -m unittest discover -s tests -p test_model_integration.py -v
 ```
 
@@ -116,21 +98,13 @@ python -m unittest discover -s tests -p test_model_integration.py -v
 
 ```text
 LoRetta/
-├── assets/              # 默认 reference/sensed 样例
-├── checkpoints/         # 本地推理权重，不纳入版本控制
-├── scripts/             # checkpoint schema 迁移工具
+├── assets/              # 默认双图样例
 ├── src/
 │   ├── config/          # 固定推理配置
-│   ├── inference/       # CLI pipeline、图像、几何、可视化、checkpoint
-│   ├── loretta/         # LoRetta、AffineLocator、DenseRegister、backbones
-│   ├── datasets/        # 预留：数据模块
-│   ├── evaluation/      # 预留：评估流程
-│   ├── lightning/       # 预留：Lightning 模块
-│   ├── losses/          # 预留：训练损失
-│   ├── metrics/         # 预留：评估指标
-│   └── training/        # 预留：训练流程
-├── tests/
-└── demo.py
+│   ├── inference/       # 推理流程、图像、几何和可视化
+│   └── loretta/         # LoRetta 模型及必要模块
+├── tests/               # 公开接口与数值契约测试
+└── demo.py              # 双图 Demo 入口
 ```
 
 输入影像会转为 RGB、固定缩放至 512×512，并使用训练时的 mean/std 归一化。第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。当前尚未选择项目级许可证。
