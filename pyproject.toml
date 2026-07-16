@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loretta"
+version = "0.1.0"
+description = "Inference-only implementation of the LoRetta localization-and-registration model"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.6",
+    "torchvision>=0.21",
+    "numpy>=2.0",
+    "pillow>=11.0",
+    "opencv-python>=4.10",
+    "einops>=0.8",
+    "ftfy",
+    "omegaconf",
+    "regex",
+    "scikit-learn",
+    "submitit",
+    "termcolor",
+    "torchmetrics",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
