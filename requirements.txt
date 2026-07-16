@@ -1,0 +1,13 @@
+torch>=2.6
+torchvision>=0.21
+numpy>=2.0
+pillow>=11.0
+opencv-python>=4.10
+einops>=0.8
+ftfy
+omegaconf
+regex
+scikit-learn
+submitit
+termcolor
+torchmetrics
