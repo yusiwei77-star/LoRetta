@@ -2,7 +2,7 @@ import unittest
 
 import torch
 
-from src.loretta.module.affine_fitter import MatchabilityWeightedAffineFitter
+from loretta.module.affine_fitter import MatchabilityWeightedAffineFitter
 
 
 class AffineFitterTests(unittest.TestCase):

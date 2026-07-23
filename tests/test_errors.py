@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from src.inference import load_rgb_image, resolve_device, run_demo
+from loretta.inference import load_rgb_image, resolve_device, run_demo
 
 
 class ErrorHandlingTests(unittest.TestCase):
@@ -18,7 +18,7 @@ class ErrorHandlingTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Could not decode image"):
                 load_rgb_image(path)
 
-    @patch("src.inference.image.torch.cuda.is_available", return_value=False)
+    @patch("loretta.inference.image.torch.cuda.is_available", return_value=False)
     def test_requested_cuda_must_exist(self, _is_available):
         with self.assertRaisesRegex(RuntimeError, "CUDA was requested"):
             resolve_device("cuda")

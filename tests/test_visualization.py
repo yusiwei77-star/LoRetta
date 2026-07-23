@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from src.inference.visualization import clear_geometry_outputs
+from loretta.inference.visualization import clear_geometry_outputs
 
 
 class VisualizationTests(unittest.TestCase):

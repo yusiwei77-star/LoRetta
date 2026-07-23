@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import numpy as np
 
-from src.inference import estimate_homography, normalized_warp_to_pixels
+from loretta.inference import estimate_homography, normalized_warp_to_pixels
 
 
 class GeometryTests(unittest.TestCase):
@@ -58,7 +58,7 @@ class GeometryTests(unittest.TestCase):
             },
         )
 
-    @patch("src.inference.geometry.np.random.choice", wraps=np.random.choice)
+    @patch("loretta.inference.geometry.np.random.choice", wraps=np.random.choice)
     def test_correspondences_are_sampled_without_replacement(self, choice):
         height = width = 32
         rows, columns = np.mgrid[:height, :width]

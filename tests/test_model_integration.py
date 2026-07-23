@@ -4,10 +4,10 @@ from pathlib import Path
 
 import torch
 
-from src.config import get_inference_config
-from src.inference.checkpoint import load_checkpoint
-from src.inference.image import image_to_tensor, load_rgb_image
-from src.loretta import LoRetta
+from loretta import LoRetta
+from loretta.config import get_inference_config
+from loretta.inference.checkpoint import load_checkpoint
+from loretta.inference.image import image_to_tensor, load_rgb_image
 
 
 CHECKPOINT = os.environ.get("LORETTA_CHECKPOINT")

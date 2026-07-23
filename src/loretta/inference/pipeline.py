@@ -8,7 +8,7 @@ import numpy as np
 import torch
 
 from ..config import get_inference_config
-from ..loretta import LoRetta
+from ..model import LoRetta
 from .checkpoint import load_checkpoint, resolve_checkpoint
 from .geometry import estimate_homography
 from .image import (

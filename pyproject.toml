@@ -26,5 +26,8 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["src*"]
+where = ["src"]
+include = ["loretta*"]
+
+[tool.setuptools.package-data]
+"loretta.third_party.dinov3" = ["LICENSE.md", "UPSTREAM.md"]

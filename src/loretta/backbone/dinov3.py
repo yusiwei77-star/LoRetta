@@ -8,7 +8,7 @@ import torch
 from einops import rearrange
 from torch import nn
 
-DINO_REPOSITORY = "facebookresearch/dinov3:adc254450203739c8149213a7a69d8d905b4fcfa"
+from ..third_party.dinov3 import dinov3_vitl16
 
 
 def _imagenet(image: torch.Tensor) -> torch.Tensor:
@@ -51,14 +51,8 @@ def build_dinov3_feature_extractor(
     enable_amp: bool,
     layer_indices: tuple[int, ...] = (11, 17),
 ) -> nn.Module:
-    """Build the frozen DINOv3 module while preserving its native state-dict keys."""
-    model: nn.Module = torch.hub.load(
-        repo_or_dir=DINO_REPOSITORY,
-        model="dinov3_vitl16",
-        pretrained=False,
-        weights=None,
-        skip_validation=True,
-    )
+    """Build the bundled DINOv3 module while preserving its native state-dict keys."""
+    model: nn.Module = dinov3_vitl16()
     layers = [
         index if index > 0 else len(model.blocks) + index
         for index in layer_indices
