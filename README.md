@@ -8,16 +8,24 @@
   <img src="assets/teaser.png" alt="LoRetta architecture" width="95%"/>
 </p>
 
-The current release status is:
+<p align="center">The current release status is:</p>
 
-| Component | Status |
-| --- | --- |
-| Inference code | Available |
-| Pretrained weights | Available |
-| Paper | Coming soon |
-| LEVIR-GM dataset | Coming soon |
-| Training code | Coming soon |
-| Evaluation code | Coming soon |
+<table align="center">
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Inference code</td><td>Available</td></tr>
+    <tr><td>Pretrained weights</td><td>Available</td></tr>
+    <tr><td>Paper</td><td>Coming soon</td></tr>
+    <tr><td>LEVIR-GM dataset</td><td>Coming soon</td></tr>
+    <tr><td>Training code</td><td>Coming soon</td></tr>
+    <tr><td>Evaluation code</td><td>Coming soon</td></tr>
+  </tbody>
+</table>
 
 ## Installation
 
