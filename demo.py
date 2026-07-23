@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from src.inference import (
+from loretta.inference import (
     DEFAULT_MATCHABILITY_THRESHOLD,
     DEFAULT_MAX_KEYPOINTS,
     DEFAULT_RANSAC_THRESHOLD,

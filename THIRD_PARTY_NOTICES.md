@@ -9,7 +9,9 @@ LoRetta-authored source code is licensed under the Apache License 2.0. Third-par
 - License: DINOv3 License
 - Local license copy: [`third_party/licenses/DINOV3_LICENSE.md`](third_party/licenses/DINOV3_LICENSE.md)
 
-LoRetta loads the DINOv3 ViT-L/16 architecture from the pinned upstream commit through `torch.hub`. The distributed LoRetta checkpoint incorporates DINOv3 parameters and is therefore distributed separately under the DINOv3 License. Use and redistribution of those materials must comply with that license, including its attribution, redistribution, and use restrictions.
+LoRetta vendors the minimal DINOv3 ViT-L/16 inference implementation required by the released model. The vendored source is derived from the pinned upstream commit and is included under `src/loretta/third_party/dinov3`; its provenance, local adaptations, and license are documented in that directory. LoRetta does not download or execute DINOv3 source code at runtime.
+
+The distributed LoRetta checkpoint incorporates DINOv3 parameters and is distributed separately under the DINOv3 License. The vendored source and checkpoint must be used and redistributed in compliance with that license, including its attribution, redistribution, and use restrictions.
 
 ## RoMaV2
 

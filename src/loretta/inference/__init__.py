@@ -1,3 +1,5 @@
+"""Inference utilities for the released LoRetta checkpoint."""
+
 from .geometry import estimate_homography
 from .image import load_rgb_image, normalized_warp_to_pixels, resolve_device
 from .pipeline import (
