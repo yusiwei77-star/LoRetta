@@ -1,7 +1,7 @@
 # LoRetta: Localization-and-Registration Foundation Model for Global-Scale Dense Image Matching
 
 <p align="center">
-  <img src="assets/teaser.png" alt="LoRetta teaser" width="95%"/>
+  <img src="assets/teaser.png" alt="LoRetta architecture" width="95%"/>
 </p>
 
 **LoRetta** is a foundation model for dense image matching in remote sensing imagery. It introduces a *localization-and-registration* paradigm: first localize the matchable overlap with an affine prior, then refine dense correspondences within the aligned frame. On the LEVIR-GM benchmark, LoRetta achieves **83.3% AUC** — outperforming RoMa v2 by 1.6 points with **47.8% lower latency**.
