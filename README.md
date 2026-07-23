@@ -1,120 +1,81 @@
-# LoRetta
+# LoRetta: Localization-and-Registration Foundation Model for Global-Scale Dense Image Matching
 
-LoRetta 是论文中 Localization-and-Registration 模型的独立纯推理实现。模型先由 `AffineLocator` 估计 matchability-weighted affine prior，再由 `DenseRegister` 在 affine-aligned frame 中通过 `Refiner0–2` 预测 residual warp 和最终 matchability。
+<p align="center">
+  <img src="assets/teaser.png" alt="LoRetta teaser" width="95%"/>
+</p>
 
-## 环境安装
+**LoRetta** is a foundation model for dense image matching in remote sensing imagery. It introduces a *localization-and-registration* paradigm: first localize the matchable overlap with an affine prior, then refine dense correspondences within the aligned frame. On the LEVIR-GM benchmark, LoRetta achieves **83.3% AUC** — outperforming RoMa v2 by 1.6 points with **47.8% lower latency**.
 
-- Python 3.10+
-- PyTorch 2.6+
-- 推荐使用 CUDA；CPU 可以运行，但速度较慢
-- 首次运行需要联网，以便从固定 commit 加载 DINOv3 ViT-L/16 架构；其参数随后由 LoRetta 权重覆盖
+[![IEEE TPAMI 2026](https://img.shields.io/badge/IEEE%20TPAMI-2026-blue)](https://personal-blog.yusiwei77-star.workers.dev/work/loretta/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-green)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-%3E%3D3.10-blue)](https://www.python.org/)
+[![HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-ffcc00)](https://huggingface.co/BRoss123/LoRetta)
 
-```bash
-pip install -r requirements.txt
-```
+📖 **Paper** · [Project Page](https://personal-blog.yusiwei77-star.workers.dev/work/loretta/) · [🤗 Model](https://huggingface.co/BRoss123/LoRetta)
 
-## 模型权重
-
-运行 Demo 时，程序会自动从 [BRoss123/LoRetta](https://huggingface.co/BRoss123/LoRetta) 下载 `loretta.pth` 并保存到 Hugging Face 本地缓存，无需手动放置权重。代码固定到已验证的模型仓库 revision，避免 `main` 后续变化影响复现。该仓库在论文发表前保持私有，因此目前需要先登录具有访问权限的 Hugging Face 账号；论文发表并公开仓库后，读者无需登录。
-
-也可以手动下载权重并通过参数指定：
-
-```powershell
-python demo.py --checkpoint C:\path\to\loretta.pth
-```
-
-权重是包含 807 个 tensor entries 的 canonical state dict，不含 Lightning 配置、训练元数据或可执行 Python 对象。读者不需要进行权重迁移；推理代码仅接受官方发布的 canonical 权重。
-
-发布权重的 SHA-256 校验值：
-
-```text
-09a502056b671d4e07819f454f96eb385ebe605a186ee1b059ce2447d8fb602e
-```
-
-## 运行 Demo
-
-仓库内置 `assets/reference.jpg` 和 `assets/sensed.jpg`。直接运行：
-
-```powershell
-python demo.py --output-dir outputs
-```
-
-使用自己的影像：
-
-```powershell
-python demo.py `
-  --reference-image C:\path\to\reference.png `
-  --sensed-image C:\path\to\sensed.png `
-  --checkpoint C:\path\to\loretta.pth `
-  --output-dir outputs
-```
-
-默认输出：
-
-- `dense_registered.png`：配准至 reference frame 的 sensed image
-- `matchability.png`：reference frame 下的 matchability map
-
-增加 `--estimate-geometry` 后，程序从高 matchability 对应中随机、无放回采样，并使用 OpenCV RANSAC 拟合 sensed-to-reference homography。估计成功时额外输出 `ransac_inliers.png` 和 `homography_registered.png`。程序不生成 JSON。
+## Installation
 
 ```bash
-python demo.py --help
+git clone https://github.com/yusiwei77-star/LoRetta.git
+cd LoRetta
+pip install -e .
 ```
 
-## 模型接口
+Requires **Python ≥ 3.10** and **PyTorch ≥ 2.6**. The pretrained checkpoint is automatically downloaded from HuggingFace Hub on first use.
 
-`LoRetta.forward(batch)` 接收：
-
-- `reference_image`：论文中的 \(I_r\)
-- `sensed_image`：论文中的 \(I_s\)
-
-并向同一字典增加：
-
-- `warp_1`：论文中的 \(W_{1/1}\)，表示从 reference pixel 指向 sensed image 的 normalized target coordinates
-- `matchability_1`：论文中的 \(M_{1/1}\)
-
-主要模块与论文对应如下：
-
-- `dinov3_feature_extractor`：DINOv3 coarse feature extractor
-- `affine_locator`：matchability-weighted affine locator
-- `vgg_feature_pyramid`：VGG19 feature pyramid
-- `dense_register.refiner0`：1/16 residual refiner
-- `dense_register.refiner1`：1/8 residual refiner
-- `dense_register.refiner2`：1/4 residual refiner
-
-## 验证
-
-无需权重的接口测试：
+## Quick Start
 
 ```bash
-python -m unittest discover -s tests -v
+python demo.py --reference-image assets/reference.jpg --sensed-image assets/sensed.jpg
 ```
 
-使用发布权重进行模型集成测试：
+This warps `sensed.jpg` into the coordinate frame of `reference.jpg` and saves the results to `outputs/`:
+- `dense_registered.png` — warped sensed image
+- `matchability.png` — per-pixel confidence heatmap
 
-```powershell
-$env:LORETTA_CHECKPOINT = "checkpoints\loretta.pth"
-python -m unittest discover -s tests -p test_model_integration.py -v
+### CLI options
+
+| Option | Default | Description |
+|---|---|---|
+| `--reference-image` | `assets/reference.jpg` | Reference image path |
+| `--sensed-image` | `assets/sensed.jpg` | Sensed (query) image path |
+| `--checkpoint` | *(auto-download)* | Local checkpoint path |
+| `--output-dir` | `outputs` | Output directory |
+| `--device` | `auto` | `auto` / `cuda` / `cpu` |
+| `--estimate-geometry` | *(off)* | Also estimate a homography via RANSAC |
+| `--matchability-threshold` | `0.5` | Confidence threshold for RANSAC keypoints |
+| `--max-keypoints` | `1000` | Max keypoints for RANSAC |
+| `--ransac-threshold` | `16.0` | RANSAC reprojection threshold (pixels) |
+
+### Python API
+
+```python
+from src.loretta import LoRetta
+from src.config import get_inference_config
+from src.inference import load_checkpoint, resolve_checkpoint
+
+config = get_inference_config()
+model = LoRetta(config)
+load_checkpoint(model, resolve_checkpoint())
+model = model.eval().cuda()
+
+output = model({"reference_image": ref, "sensed_image": sensed})
+# output["warp_1"]          (B, 2, H, W) dense warp
+# output["matchability_1"]  (B, 1, H, W) per-pixel confidence
 ```
 
-## 目录结构
+## Citation
 
-```text
-LoRetta/
-├── assets/              # 默认双图样例
-├── src/
-│   ├── config/          # 固定推理配置
-│   ├── inference/       # 推理流程、图像、几何和可视化
-│   └── loretta/         # LoRetta 模型及必要模块
-├── tests/               # 公开接口与数值契约测试
-└── demo.py              # 双图 Demo 入口
+```bibtex
+@article{yu2026loretta,
+  title     = {LoRetta: A Localization-and-Registration Foundation Model and
+               Extensive Dataset for Global-Scale Dense Image Matching},
+  author    = {Yu, Siwei and Guo, Han and Shi, Zhenwei and Zou, Zhengxia},
+  journal   = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  year      = {2026},
+}
 ```
-
-输入影像会转为 RGB、固定缩放至 512×512，并使用训练时的 mean/std 归一化。
 
 ## License
 
-Copyright 2026 LEVIR Lab, Beihang University.
-
-LoRetta 自研源代码按照 [Apache License 2.0](LICENSE) 发布。第三方组件继续受各自许可证约束，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 和 [`third_party/licenses/`](third_party/licenses/)。
-
-Hugging Face 发布的 `loretta.pth` 包含 DINOv3 参数，因此模型权重按照单独的 [DINOv3 License](third_party/licenses/DINOV3_LICENSE.md) 分发，不适用 Apache-2.0。DINOv3 使用自定义许可条款；使用或再分发权重前请阅读完整协议。
+This project is released under the [Apache 2.0 License](LICENSE). It incorporates third-party components from [DINOv3](https://github.com/facebookresearch/dinov3) (Meta license), [RoMaV2](https://github.com/Parskatt/RoMa) (MIT), and [Torchvision](https://github.com/pytorch/vision) (BSD 3-Clause). See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for details.
