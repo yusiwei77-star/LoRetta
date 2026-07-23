@@ -4,7 +4,7 @@
   <img src="assets/teaser.png" alt="LoRetta architecture" width="95%"/>
 </p>
 
-**LoRetta** is a foundation model for dense image matching in remote sensing imagery. It introduces a *localization-and-registration* paradigm: first localize the matchable overlap with an affine prior, then refine dense correspondences within the aligned frame. On the LEVIR-GM benchmark, LoRetta achieves **83.3% AUC** — outperforming RoMa v2 by 1.6 points with **47.8% lower latency**.
+**LoRetta** is a foundation model for dense image matching in remote sensing imagery. It introduces a _localization-and-registration_ paradigm: first localize the matchable overlap with an affine prior, then refine dense correspondences within the aligned frame. On the LEVIR-GM benchmark, LoRetta achieves **83.3% AUC** — outperforming RoMa v2 by 1.6 points with **47.8% lower latency**.
 
 [![IEEE TPAMI 2026](https://img.shields.io/badge/IEEE%20TPAMI-2026-blue)](https://personal-blog.yusiwei77-star.workers.dev/work/loretta/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green)](LICENSE)
@@ -21,7 +21,7 @@ cd LoRetta
 pip install -e .
 ```
 
-Requires **Python ≥ 3.10** and **PyTorch ≥ 2.6**. The pretrained checkpoint is automatically downloaded from HuggingFace Hub on first use.
+Requires **Python >= 3.10** and **PyTorch >= 2.6**. The pretrained checkpoint is automatically downloaded from HuggingFace Hub on first use.
 
 ## Quick Start
 
@@ -30,22 +30,14 @@ python demo.py --reference-image assets/reference.jpg --sensed-image assets/sens
 ```
 
 This warps `sensed.jpg` into the coordinate frame of `reference.jpg` and saves the results to `outputs/`:
+
 - `dense_registered.png` — warped sensed image
 - `matchability.png` — per-pixel confidence heatmap
 
-### CLI options
+With `--estimate-geometry`, two additional outputs are produced:
 
-| Option | Default | Description |
-|---|---|---|
-| `--reference-image` | `assets/reference.jpg` | Reference image path |
-| `--sensed-image` | `assets/sensed.jpg` | Sensed (query) image path |
-| `--checkpoint` | *(auto-download)* | Local checkpoint path |
-| `--output-dir` | `outputs` | Output directory |
-| `--device` | `auto` | `auto` / `cuda` / `cpu` |
-| `--estimate-geometry` | *(off)* | Also estimate a homography via RANSAC |
-| `--matchability-threshold` | `0.5` | Confidence threshold for RANSAC keypoints |
-| `--max-keypoints` | `1000` | Max keypoints for RANSAC |
-| `--ransac-threshold` | `16.0` | RANSAC reprojection threshold (pixels) |
+- `ransac_inliers.png` — matched keypoints with RANSAC inliers
+- `homography_registered.png` — sensed image warped by the estimated homography
 
 ### Python API
 
