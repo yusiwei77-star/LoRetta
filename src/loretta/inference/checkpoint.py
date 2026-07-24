@@ -1,13 +1,29 @@
+import hashlib
 from pathlib import Path
 
 import torch
 from huggingface_hub import hf_hub_download
+from huggingface_hub.errors import GatedRepoError
 from torch import nn
-
 
 MODEL_REPO_ID = "BRoss123/LoRetta"
 CHECKPOINT_FILENAME = "loretta.pth"
-MODEL_REVISION = "9ee3c5712d8da9ff47b7b8d377b3dc00906ab287"
+MODEL_REVISION = "49d9faf7b9fa7ca2db03149a5e331dcb0bf74622"  # pragma: allowlist secret
+CHECKPOINT_SHA256 = "09a502056b671d4e07819f454f96eb385ebe605a186ee1b059ce2447d8fb602e"  # pragma: allowlist secret
+_HASH_CHUNK_SIZE = 8 * 1024 * 1024
+
+
+def _verify_checkpoint_hash(path: Path) -> None:
+    digest = hashlib.sha256()
+    with path.open("rb") as checkpoint:
+        while chunk := checkpoint.read(_HASH_CHUNK_SIZE):
+            digest.update(chunk)
+    actual = digest.hexdigest()
+    if actual != CHECKPOINT_SHA256:
+        raise RuntimeError(
+            f"Downloaded checkpoint SHA-256 mismatch: expected {CHECKPOINT_SHA256}, "
+            f"found {actual}. Remove the cached file and download it again."
+        )
 
 
 def resolve_checkpoint(checkpoint_path: str | Path | None = None) -> Path:
@@ -16,19 +32,27 @@ def resolve_checkpoint(checkpoint_path: str | Path | None = None) -> Path:
         return Path(checkpoint_path)
 
     try:
-        return Path(
+        path = Path(
             hf_hub_download(
                 repo_id=MODEL_REPO_ID,
                 filename=CHECKPOINT_FILENAME,
                 revision=MODEL_REVISION,
             )
         )
+    except GatedRepoError as error:
+        raise RuntimeError(
+            f"Access to {MODEL_REPO_ID} is gated. Open the model page, accept the "
+            "DINOv3 license and responsible-use notice, then run `hf auth login`. "
+            "Alternatively, pass --checkpoint with an authorized local file."
+        ) from error
     except Exception as error:
         raise RuntimeError(
             f"Could not download {MODEL_REPO_ID}/{CHECKPOINT_FILENAME}. "
-            "Check the network connection and Hugging Face repository access, "
+            "Check the network connection and Hugging Face authentication, "
             "or pass --checkpoint with a local file."
         ) from error
+    _verify_checkpoint_hash(path)
+    return path
 
 
 def load_checkpoint(model: nn.Module, checkpoint_path: str | Path) -> int:

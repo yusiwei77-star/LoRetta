@@ -9,7 +9,6 @@ from loretta.config import get_inference_config
 from loretta.inference.checkpoint import load_checkpoint
 from loretta.inference.image import image_to_tensor, load_rgb_image
 
-
 CHECKPOINT = os.environ.get("LORETTA_CHECKPOINT")
 DEVICE = os.environ.get(
     "LORETTA_TEST_DEVICE", "cuda" if torch.cuda.is_available() else "cpu"

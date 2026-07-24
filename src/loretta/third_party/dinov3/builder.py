@@ -7,7 +7,7 @@
 
 from .models import DinoVisionTransformer
 
-DINOV3_UPSTREAM_COMMIT = "adc254450203739c8149213a7a69d8d905b4fcfa"
+DINOV3_UPSTREAM_COMMIT = "adc254450203739c8149213a7a69d8d905b4fcfa"  # pragma: allowlist secret
 
 
 def dinov3_vitl16() -> DinoVisionTransformer:

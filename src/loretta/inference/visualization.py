@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 from PIL import Image
 
-
 GEOMETRY_OUTPUT_NAMES = ("ransac_inliers.png", "homography_registered.png")
 
 

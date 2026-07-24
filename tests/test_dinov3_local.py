@@ -8,7 +8,6 @@ from loretta.third_party.dinov3.builder import (
     dinov3_vitl16,
 )
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -72,7 +71,7 @@ class LocalDinoV3Tests(unittest.TestCase):
     def test_vendored_source_records_the_exact_upstream_commit(self):
         self.assertEqual(
             DINOV3_UPSTREAM_COMMIT,
-            "adc254450203739c8149213a7a69d8d905b4fcfa",
+            "adc254450203739c8149213a7a69d8d905b4fcfa",  # pragma: allowlist secret
         )
         provenance = (
             PROJECT_ROOT / "src" / "loretta" / "third_party" / "dinov3" / "UPSTREAM.md"
