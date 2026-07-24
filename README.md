@@ -37,8 +37,6 @@ pip install -e .
 
 Requires **Python >= 3.10** and **PyTorch >= 2.6**. The pinned DINOv3 architecture is bundled with LoRetta, and the pretrained checkpoint is automatically downloaded from Hugging Face Hub on first use. To run without network access, pass a previously downloaded checkpoint with `--checkpoint /path/to/loretta.pth`.
 
-For programmatic use, the installed package exposes `from loretta import LoRetta`.
-
 ## Quick Start
 
 ```bash
