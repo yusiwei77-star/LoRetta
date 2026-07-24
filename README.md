@@ -19,7 +19,7 @@
   </thead>
   <tbody>
     <tr><td>Inference code</td><td>Available</td></tr>
-    <tr><td>Pretrained weights</td><td>Available — Hugging Face sign-in and license acknowledgment required</td></tr>
+    <tr><td>Pretrained weights</td><td>Available</td></tr>
     <tr><td>Paper</td><td>Coming soon</td></tr>
     <tr><td>LEVIR-GM dataset</td><td>Coming soon</td></tr>
     <tr><td>Training code</td><td>Coming soon</td></tr>
@@ -35,7 +35,7 @@ cd LoRetta
 pip install -e .
 ```
 
-Requires **Python >= 3.10** and **PyTorch >= 2.6**. The pinned DINOv3 architecture is bundled with LoRetta. The pretrained checkpoint is distributed through a gated Hugging Face repository: sign in on the [model page](https://huggingface.co/BRoss123/LoRetta), acknowledge the DINOv3 License and responsible-use notice, then authenticate the machine once with `hf auth login`. The checkpoint is downloaded from a fixed revision and verified against its published SHA-256 on first use. To run without network access, pass a previously downloaded checkpoint with `--checkpoint /path/to/loretta.pth`.
+Requires **Python >= 3.10** and **PyTorch >= 2.6**. The pinned DINOv3 architecture is bundled with LoRetta, and the pretrained checkpoint is automatically downloaded from Hugging Face Hub on first use. To run without network access, pass a previously downloaded checkpoint with `--checkpoint /path/to/loretta.pth`.
 
 For programmatic use, the installed package exposes `from loretta import LoRetta`.
 
