@@ -8,24 +8,7 @@
   <img src="assets/teaser.png" alt="LoRetta architecture" width="95%"/>
 </p>
 
-<p align="center">The current release status is:</p>
-
-<table align="center">
-  <thead>
-    <tr>
-      <th>Component</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td>Inference code</td><td>Available</td></tr>
-    <tr><td>Pretrained weights</td><td>Available</td></tr>
-    <tr><td>Paper</td><td>Coming soon</td></tr>
-    <tr><td>LEVIR-GM dataset</td><td>Coming soon</td></tr>
-    <tr><td>Training code</td><td>Coming soon</td></tr>
-    <tr><td>Evaluation code</td><td>Coming soon</td></tr>
-  </tbody>
-</table>
+Inference code and pretrained weights are available. The paper, dataset, training code, and evaluation code are coming soon.
 
 ## Installation
 
@@ -35,7 +18,7 @@ cd LoRetta
 pip install -e .
 ```
 
-Requires **Python >= 3.10** and **PyTorch >= 2.6**. The pinned DINOv3 architecture is bundled with LoRetta, and the pretrained checkpoint is automatically downloaded from Hugging Face Hub on first use. To run without network access, pass a previously downloaded checkpoint with `--checkpoint /path/to/loretta.pth`.
+Requires **Python >= 3.10** and **PyTorch >= 2.6**. The pretrained weights are downloaded automatically from Hugging Face on first use. For offline use, pass a local checkpoint with `--checkpoint /path/to/loretta.pth`.
 
 ## Quick Start
 
