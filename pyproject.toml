@@ -41,6 +41,11 @@ dependencies = [
     "huggingface_hub>=0.30,<2",
 ]
 
+[project.optional-dependencies]
+test = [
+    "httpx>=0.27,<1",
+]
+
 [project.urls]
 Homepage = "https://www.siweiyu.com/work/loretta/"
 Repository = "https://github.com/yusiwei77-star/LoRetta"

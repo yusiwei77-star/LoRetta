@@ -5,3 +5,4 @@ pillow==11.0.0
 opencv-python==4.10.0.84
 einops==0.8.0
 huggingface_hub==0.30.0
+httpx==0.27.0
