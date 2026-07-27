@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use LoRetta, please cite this work."
-title: "LoRetta: A Localization-and-Registration Foundation Model and Extensive Dataset for Global-Scale Dense Image Matching"
+title: "LoRetta: A Foundation Model and Extensive Dataset for Global-Scale Remote Sensing Dense Image Matching"
 version: 0.1.0
 date-released: 2026-07-24
 url: "https://www.siweiyu.com/work/loretta/"
@@ -16,7 +16,7 @@ authors:
     given-names: Zhengxia
 preferred-citation:
   type: article
-  title: "LoRetta: A Localization-and-Registration Foundation Model and Extensive Dataset for Global-Scale Dense Image Matching"
+  title: "LoRetta: A Foundation Model and Extensive Dataset for Global-Scale Remote Sensing Dense Image Matching"
   year: 2026
   journal: "arXiv preprint"
   authors:

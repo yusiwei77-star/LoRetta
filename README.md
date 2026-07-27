@@ -1,4 +1,4 @@
-# LoRetta: A Localization-and-Registration Foundation Model and Extensive Dataset for Global-Scale Dense Image Matching
+# LoRetta: A Foundation Model and Extensive Dataset for Global-Scale Remote Sensing Dense Image Matching
 
 <p align="center"><a href="https://www.siweiyu.com/work/loretta/">Project Page</a> · <a href="https://huggingface.co/BRoss123/LoRetta">Model</a></p>
 
@@ -45,8 +45,8 @@ With `--estimate-geometry`, two additional outputs are produced:
 
 ```bibtex
 @article{yu2026loretta,
-  title     = {LoRetta: A Localization-and-Registration Foundation Model and
-               Extensive Dataset for Global-Scale Dense Image Matching},
+  title     = {LoRetta: A Foundation Model and Extensive Dataset for
+               Global-Scale Remote Sensing Dense Image Matching},
   author    = {Yu, Siwei and Guo, Han and Shi, Zhenwei and Zou, Zhengxia},
   journal   = {arXiv preprint},
   year      = {2026},
