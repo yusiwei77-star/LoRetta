@@ -1,6 +1,6 @@
 # LoRetta: A Foundation Model and Extensive Dataset for Global-Scale Remote Sensing Dense Image Matching
 
-<p align="center"><a href="https://www.siweiyu.com/work/loretta/">Project Page</a> · <a href="https://huggingface.co/BRoss123/LoRetta">Model</a></p>
+<p align="center"><a href="https://arxiv.org/abs/2608.04106">Paper</a> · <a href="https://www.siweiyu.com/work/loretta/">Project Page</a> · <a href="https://huggingface.co/BRoss123/LoRetta">Model</a></p>
 
 **LoRetta** is a foundation model for dense image matching in remote sensing imagery. It introduces a _localization-and-registration_ paradigm: first localize the matchable overlap with an affine prior, then refine dense correspondences within the aligned frame. On the LEVIR-GM benchmark, LoRetta achieves **83.3% AUC** — outperforming RoMa v2 by 1.6 points with **47.8% lower latency**.
 
@@ -8,7 +8,7 @@
   <img src="assets/teaser.png" alt="LoRetta architecture" width="95%"/>
 </p>
 
-Inference code and pretrained weights are available. The paper, dataset, training code, and evaluation code are coming soon.
+Inference code and pretrained weights are available, and the [paper](https://arxiv.org/abs/2608.04106) is on arXiv. The dataset, training code, and evaluation code are coming soon.
 
 ## Installation
 
@@ -48,7 +48,7 @@ With `--estimate-geometry`, two additional outputs are produced:
   title     = {LoRetta: A Foundation Model and Extensive Dataset for
                Global-Scale Remote Sensing Dense Image Matching},
   author    = {Yu, Siwei and Guo, Han and Shi, Zhenwei and Zou, Zhengxia},
-  journal   = {arXiv preprint},
+  journal   = {arXiv preprint arXiv:2608.04106},
   year      = {2026},
 }
 ```
