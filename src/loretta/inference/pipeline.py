@@ -73,7 +73,7 @@ def run_demo(
     reference_original = load_rgb_image(reference_path)
     sensed_original = load_rgb_image(sensed_path)
     reference_tensor, _ = image_to_tensor(reference_original, device)
-    sensed_tensor, sensed_model = image_to_tensor(sensed_original, device)
+    sensed_tensor, _ = image_to_tensor(sensed_original, device)
 
     model = LoRetta(get_inference_config(enable_amp=device.type == "cuda"))
     load_checkpoint(model, resolve_checkpoint(checkpoint_path))
@@ -103,8 +103,8 @@ def run_demo(
         raise RuntimeError("Model produced non-finite warp or matchability values")
     warp_pixels = normalized_warp_to_pixels(warp, MODEL_SIZE)
     outputs = save_dense_outputs(
-        sensed_model=sensed_model,
-        warp_pixels=warp_pixels,
+        sensed_image=np.asarray(sensed_original),
+        warp=warp,
         matchability=matchability,
         reference_size=reference_original.size,
         output_dir=output,

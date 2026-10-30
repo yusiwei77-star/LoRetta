@@ -15,21 +15,61 @@ def clear_geometry_outputs(output_dir: Path) -> None:
 
 def save_dense_outputs(
     *,
-    sensed_model: np.ndarray,
-    warp_pixels: np.ndarray,
+    sensed_image: np.ndarray,
+    warp: np.ndarray,
     matchability: np.ndarray,
     reference_size: tuple[int, int],
     output_dir: Path,
 ) -> dict[str, str]:
+    reference_width, reference_height = reference_size
+    model_height, model_width = warp.shape[:2]
+    model_x = (np.arange(model_width, dtype=np.float32) + 0.5) * 2.0 / model_width - 1.0
+    model_y = (np.arange(model_height, dtype=np.float32) + 0.5) * 2.0 / model_height - 1.0
+    model_grid = np.stack(np.meshgrid(model_x, model_y), axis=-1)
+    displacement = warp - model_grid
+
+    sample_x = (
+        (np.arange(reference_width, dtype=np.float32) + 0.5)
+        * model_width
+        / reference_width
+        - 0.5
+    )
+    sample_y = (
+        (np.arange(reference_height, dtype=np.float32) + 0.5)
+        * model_height
+        / reference_height
+        - 0.5
+    )
+    sample_grid_x, sample_grid_y = np.meshgrid(sample_x, sample_y)
+    displacement_full = cv2.remap(
+        displacement,
+        sample_grid_x,
+        sample_grid_y,
+        interpolation=cv2.INTER_LINEAR,
+        borderMode=cv2.BORDER_REPLICATE,
+    )
+
+    sensed_height, sensed_width = sensed_image.shape[:2]
+    base_x = (
+        (np.arange(reference_width, dtype=np.float32) + 0.5)
+        * sensed_width
+        / reference_width
+        - 0.5
+    )
+    base_y = (
+        (np.arange(reference_height, dtype=np.float32) + 0.5)
+        * sensed_height
+        / reference_height
+        - 0.5
+    )
+    map_x = base_x[np.newaxis, :] + displacement_full[..., 0] * sensed_width / 2.0
+    map_y = base_y[:, np.newaxis] + displacement_full[..., 1] * sensed_height / 2.0
     dense_registered = cv2.remap(
-        sensed_model,
-        warp_pixels[..., 0],
-        warp_pixels[..., 1],
+        sensed_image,
+        map_x,
+        map_y,
         interpolation=cv2.INTER_LINEAR,
         borderMode=cv2.BORDER_CONSTANT,
-    )
-    dense_registered = cv2.resize(
-        dense_registered, reference_size, interpolation=cv2.INTER_LINEAR
     )
     dense_path = output_dir / "dense_registered.png"
     matchability_path = output_dir / "matchability.png"

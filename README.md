@@ -33,7 +33,7 @@ Input assumptions:
 
 This warps `sensed.jpg` into the coordinate frame of `reference.jpg` and saves the results to `outputs/`:
 
-- `dense_registered.png` — warped sensed image
+- `dense_registered.png` — original-resolution sensed image warped by the dense correspondence field
 - `matchability.png` — per-pixel confidence heatmap
 
 With `--estimate-geometry`, two additional outputs are produced:
