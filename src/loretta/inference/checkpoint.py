@@ -8,8 +8,8 @@ from torch import nn
 
 MODEL_REPO_ID = "BRoss123/LoRetta"
 CHECKPOINT_FILENAME = "loretta.pth"
-MODEL_REVISION = "95bf3670465cc80ffca8b1edf94b5eb651211194"  # pragma: allowlist secret
-CHECKPOINT_SHA256 = "09a502056b671d4e07819f454f96eb385ebe605a186ee1b059ce2447d8fb602e"  # pragma: allowlist secret
+MODEL_REVISION = "a37451603dc8f2575de51c19dc44ae671d6fcbe3"  # pragma: allowlist secret
+CHECKPOINT_SHA256 = "9aca8bc46f1e1f653ae7ab31354d45461a462b8142af90fcc07dc6f1f1572589"  # pragma: allowlist secret
 _HASH_CHUNK_SIZE = 8 * 1024 * 1024
 
 

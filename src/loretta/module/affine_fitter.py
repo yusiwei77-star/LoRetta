@@ -25,8 +25,9 @@ class MatchabilityWeightedAffineFitter:
             torch.arange(coarse_width, device=device, dtype=dtype),
             indexing="ij",
         )
-        reference_x = (column_indices + 0.5) * (float(image_width) / coarse_width)
-        reference_y = (row_indices + 0.5) * (float(image_height) / coarse_height)
+        # Express coarse-cell centers in zero-based image pixel coordinates.
+        reference_x = (column_indices + 0.5) * (float(image_width) / coarse_width) - 0.5
+        reference_y = (row_indices + 0.5) * (float(image_height) / coarse_height) - 0.5
         reference_x = reference_x.unsqueeze(0).expand(batch_size, -1, -1)
         reference_y = reference_y.unsqueeze(0).expand(batch_size, -1, -1)
 

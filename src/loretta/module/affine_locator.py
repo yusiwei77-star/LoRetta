@@ -148,7 +148,7 @@ class AffineLocator(nn.Module):
             reference_grid.reshape(batch_size, height * width, 2),
             (self.position_scale * self.position_frequencies).to(
                 device=reference_descriptors.device,
-                dtype=reference_descriptors.dtype,
+                dtype=reference_grid.dtype,
             ),
         ).reshape(batch_size, height, width, -1)
         sensed_position_embeddings = torch.cat(

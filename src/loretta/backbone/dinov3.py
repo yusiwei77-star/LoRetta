@@ -21,6 +21,12 @@ def _imagenet(image: torch.Tensor) -> torch.Tensor:
     return (image - mean) / std
 
 
+def _supports_cuda_bf16() -> bool:
+    return torch.cuda.is_available() and bool(
+        torch.cuda.is_bf16_supported(including_emulation=False)
+    )
+
+
 def _wrap_forward(
     forward: Callable[[torch.Tensor], list[torch.Tensor]],
     *,
@@ -37,7 +43,20 @@ def _wrap_forward(
             if channels != 3:
                 raise ValueError(f"Expected RGB input, got {tuple(image.shape)}")
             out_height, out_width = height // patch_size, width // patch_size
-            outputs = forward(_imagenet(image))
+            model_input = _imagenet(image)
+            first_parameter = next(self.parameters(), None)
+            if (
+                not amp_enabled
+                and first_parameter is not None
+                and model_input.dtype != first_parameter.dtype
+            ):
+                model_input = model_input.to(dtype=first_parameter.dtype)
+            outputs = forward(model_input)
+            if not amp_enabled:
+                outputs = [
+                    output.to(dtype=image.dtype) if output.dtype != image.dtype else output
+                    for output in outputs
+                ]
             return [
                 rearrange(output, "B (H W) D -> B H W D", H=out_height, W=out_width)
                 for output in outputs
@@ -59,6 +78,8 @@ def build_dinov3_feature_extractor(
     ]
     for parameter in model.parameters():
         parameter.requires_grad = False
+    if enable_amp and _supports_cuda_bf16():
+        model.to(dtype=torch.bfloat16)
     model.forward = MethodType(
         _wrap_forward(
             partial(model.get_intermediate_layers, n=layers),
