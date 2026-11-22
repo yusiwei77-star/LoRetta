@@ -1,7 +1,7 @@
 torch>=2.6,<3
 torchvision>=0.21,<1
 numpy>=2.0,<3
-pillow>=11.0,<13
+pillow>=11.0,<14
 opencv-python>=4.10,<5
 einops>=0.8,<1
 huggingface_hub>=0.30,<2
